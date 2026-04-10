@@ -1,0 +1,81 @@
+{
+    "Comment": "A description of my state machine",
+    "StartAt": "StartInstances",
+    "States": {
+      "StartInstances": {
+        "Type": "Task",
+        "Resource": "arn:aws:lambda:ap-south-1:477323665679:function:S1-StartInstances",
+        "Next": "Lambda_Error"
+      },
+      "Lambda_Error": {
+        "Type": "Choice",
+        "Choices": [
+          {
+            "Variable": "$.L1_IsError",
+            "BooleanEquals": true,
+            "Next": "SendNotification"
+          }
+        ],
+        "Default": "NoInstanceToProceed"
+      },
+      "NoInstanceToProceed": {
+        "Type": "Choice",
+        "Choices": [
+          {
+            "Variable": "$.NoInstanceToProceed",
+            "BooleanEquals": true,
+            "Next": "SendNotification"
+          }
+        ],
+        "Default": "Instance_Status"
+      },
+      "Instance_Status": {
+        "Type": "Choice",
+        "Choices": [
+          {
+            "Variable": "$.isInstancesStarted",
+            "BooleanEquals": true,
+            "Next": "WaitForInstancetoRun"
+          }
+        ],
+        "Default": "GetInstanceData"
+      },
+      "WaitForInstancetoRun": {
+        "Type": "Wait",
+        "Seconds": 180,
+        "Next": "GetInstanceData"
+      },
+      "GetInstanceData": {
+        "Type": "Parallel",
+        "Branches": [
+          {
+            "StartAt": "Linux",
+            "States": {
+              "Linux": {
+                "Type": "Task",
+                "Resource": "arn:aws:lambda:ap-south-1:477323665679:function:S2-LinuxUsers",
+                "End": true
+              }
+            }
+          },
+          {
+            "StartAt": "Windows",
+            "States": {
+              "Windows": {
+                "Type": "Task",
+                "Resource": "arn:aws:lambda:ap-south-1:477323665679:function:S2-WindowsUsers",
+                "End": true
+              }
+            }
+          }
+        ],
+        "ResultPath": "$.ParallelStateOutput",
+        "Next": "SendNotification"
+      },
+      "SendNotification": {
+        "Type": "Task",
+        "Resource": "arn:aws:lambda:ap-south-1:477323665679:function:S4-SendMail",
+        "End": true
+      }
+    }
+  }

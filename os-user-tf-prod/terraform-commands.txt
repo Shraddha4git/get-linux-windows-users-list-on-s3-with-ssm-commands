@@ -1,0 +1,8 @@
+terraform init  # Initialize Terraform
+terraform plan
+terraform apply -target=module.s3
+terraform apply -target=module.iam
+terraform apply -target=module.sns  
+terraform apply -target=module.lambda-function
+terraform apply -target=module.step-function
+terraform apply -target=module.cloudwatch-event

@@ -1,0 +1,63 @@
+Testing PRODUCTION FLow
+
+Testing : 1
+Pre-prod server - Environment : TEST
+Step 1:
+Manually maintain the Instance Status sheet along with instance name and status.
+
+Step 2:
+Execute the step function with the input:
+{
+  "Environment": "TEST",
+  "Regions": [
+    "ap-south-1"
+  ]
+}
+
+Step 3:
+Manually download the Instance Status sheet
+Verify the sheet
+
+Scenarios:
+1 stop state
+2 running state
+3 SSM Manged
+4 SSM Not Manged
+
+
+Testing 2:
+Step 1:
+Manually maintain the Instance Status sheet along with instance name and status.
+
+Step 2:
+Execute the step function with the input:
+{
+  "Environment": "PREPROD",
+  "Regions": [
+    "ap-south-1"
+  ]
+}
+
+Step 3:
+Manually download the Instance Status sheet
+Verify both the sheets
+
+
+Testing 3:
+Pre-requisties
+The servers to be excluded should have tag 'OSUserScriptExclude' Vlaue: true attached (Firewall, DB, etc)
+Step 1:
+Manually maintain the Instance Status sheet along with instance name and status.
+
+Step 2:
+Execute the step function with the input:
+{
+  "Environment": "PROD",
+  "Regions": [
+    "ap-south-1"
+  ]
+}
+
+Step 3:
+Manually download the Instance Status sheet
+Verify both the sheets
